@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CatService } from './cat.service';
 
 @Module({
-  providers: [CatService],
+  providers: [],
+  exports: [],
 })
 export class CatModule {}
