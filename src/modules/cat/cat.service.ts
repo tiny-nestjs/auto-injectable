@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { Cat } from './cat.interface';
+import { AutoInjectable } from '../../lib/auto-injectable.decorator';
 
-@Injectable()
+@AutoInjectable()
 export class CatService {
   private readonly cats: Cat[] = [
     {
