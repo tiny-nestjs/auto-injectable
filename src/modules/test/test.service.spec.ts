@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TestService } from './test.service';
 import { CatModule } from '../cat/cat.module';
-import { CatService } from '../cat/cat.service';
 
 const catServiceMock = {
   create: jest.fn(),
@@ -16,7 +15,7 @@ describe('TestService', () => {
       imports: [CatModule],
       providers: [
         TestService,
-        { provide: CatService, useValue: catServiceMock },
+        // { provide: CatService, useValue: catServiceMock },
       ],
     }).compile();
 
