@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TestModule } from './modules/test/test.module';
+import { ComponentScan } from './lib/component-scan.decorator';
+import { TestController } from './modules/test/test.controller';
+import { TestService } from './modules/test/test.service';
 
+@ComponentScan()
 @Module({
-  imports: [TestModule],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [TestController],
+  providers: [TestService],
 })
 export class AppModule {}
