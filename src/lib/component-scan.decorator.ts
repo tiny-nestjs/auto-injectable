@@ -1,45 +1,69 @@
+// component-scan.decorator.ts
+
 import { Module } from '@nestjs/common';
-import * as path from 'path';
+import * as glob from 'glob';
 import { AUTO_INJECTABLE_METADATA } from './auto-injectable.decorator';
+import * as path from 'path';
 
 const MODULE_DIR_METADATA = 'module-dir';
 
-export function SetAutoInjectable(target: any) {
-  Reflect.defineMetadata(AUTO_INJECTABLE_METADATA, true, target);
-}
-
 export function ComponentScan(): ClassDecorator {
-  return (target: any) => {
-    const parentModuleFile = module.parent?.filename || '';
-    const moduleDir = path.dirname(
-      require.resolve(
-        path.join(
-          path.dirname(parentModuleFile),
-          target.name.replace(/([a-z])([A-Z])/g, '$1.$2').toLowerCase(),
-        ),
-      ),
-    );
-
-    SetAutoInjectable(target);
+  return () => {
+    const root = getRootDirectory();
 
     @Module({
-      providers: [
-        {
-          provide: target,
-          useClass: target,
-        },
-      ],
+      providers: [],
     })
     class ScannedModule {
       constructor() {
-        Reflect.defineMetadata(
-          MODULE_DIR_METADATA,
-          path.resolve(moduleDir),
-          this,
-        );
+        getAutoInjectableClasses(root).then((autoInjectables) => {
+          console.log('autoInjectables', autoInjectables);
+          for (const autoInjectable of autoInjectables) {
+            Module({
+              providers: [
+                {
+                  provide: autoInjectable,
+                  useClass: autoInjectable,
+                },
+              ],
+            })(ScannedModule);
+          }
+          Reflect.defineMetadata(MODULE_DIR_METADATA, root, this);
+        });
       }
     }
 
     return ScannedModule as any;
   };
+}
+
+async function getAutoInjectableClasses(scanDirectory: string): Promise<any[]> {
+  const files = glob.sync(`${scanDirectory}/**/*.js`);
+  const autoInjectableClasses = [];
+  for (const file of files) {
+    const requiredModule = await import(file);
+    if (requiredModule) {
+      for (const key in requiredModule) {
+        if (requiredModule.hasOwnProperty(key)) {
+          const moduleExports = requiredModule[key];
+          if (
+            moduleExports &&
+            moduleExports.prototype &&
+            Reflect.hasMetadata(AUTO_INJECTABLE_METADATA, moduleExports)
+          ) {
+            autoInjectableClasses.push(moduleExports);
+          }
+        }
+      }
+    }
+  }
+  return autoInjectableClasses;
+}
+
+function getRootDirectory(): string {
+  const appModulePath = require.main?.filename;
+  if (appModulePath) {
+    return path.join(path.resolve(appModulePath), '..');
+  }
+  throw new Error('Could not determine AppModule path');
 }
