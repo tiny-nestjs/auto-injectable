@@ -1,5 +1,5 @@
+import { AutoInjectable } from 'src/auto/decorator/AutoInjectable';
 import { Cat } from './cat.interface';
-import { AutoInjectable } from '../../lib/auto-injectable.decorator';
 
 @AutoInjectable()
 export class CatService {
