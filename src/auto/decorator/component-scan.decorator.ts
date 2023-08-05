@@ -1,6 +1,6 @@
 import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
-import path from 'path';
+import * as path from 'path';
 
 // export const ComponentScan = (
 //   options: string[] = ['dist/**/*.js'],
@@ -20,7 +20,7 @@ import path from 'path';
 // };
 
 export function ComponentScan(
-  options: string[] = ['dist/**/*.js'],
+  paths: string[] = [getRootPath()],
 ): ClassDecorator {
   return function (target: any) {
     const originalMetadata = {
@@ -29,6 +29,7 @@ export function ComponentScan(
       providers: Reflect.getMetadata('providers', target) || [],
     };
 
+    const options = paths.map((path) => `${path}/**/*.js`);
     Module({
       ...originalMetadata,
       imports: [...originalMetadata.imports, AutoModule.forRootAsync(options)],
@@ -36,10 +37,6 @@ export function ComponentScan(
   };
 }
 
-function getRootDirectory(): string {
-  const appModulePath = require.main?.filename;
-  if (appModulePath) {
-    return path.join(path.resolve(appModulePath), '..');
-  }
-  throw new Error('Could not determine AppModule path');
+function getRootPath(): string {
+  return path.join(path.resolve(require.main?.filename), '..') || 'dist';
 }
