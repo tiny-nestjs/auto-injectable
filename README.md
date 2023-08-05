@@ -3,7 +3,7 @@
 </p>
 
 <div align="center">
-  <img src="https://img.shields.io/npm/v/@nestjs/auto-injectable?color=blue" alt="npm version">
+  <img src="https://img.shields.io/badge/npm-v0.0.1-blue" alt="npm version">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </div>
 
@@ -21,7 +21,7 @@ handling of automatic injection of dependencies by the framework.
 ## Installation
 
 ```bash
-npm install @nestjs/auto-injectable
+npm install @tiny-nestjs/auto-injectable
 ```
 
 ## Usage
@@ -71,4 +71,4 @@ contributions are highly appreciated. If you find any improvements or bugs, plea
 
 ## License
 
-`@nestjs/auto-injectable` is distributed under the MIT license.
+`@tiny-nestjs/auto-injectable` is distributed under the MIT license.
