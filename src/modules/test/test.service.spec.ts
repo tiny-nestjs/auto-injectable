@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TestService } from './test.service';
-import { CatModule } from '../cat/cat.module';
 import { CatService } from '../cat/cat.service';
 
 const catServiceMock = {
@@ -13,7 +12,6 @@ describe('TestService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [CatModule],
       providers: [
         TestService,
         { provide: CatService, useValue: catServiceMock },
