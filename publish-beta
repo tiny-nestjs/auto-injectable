@@ -1,0 +1,4 @@
+#!/bin/bash
+
+read -p "Enter the desired tag number: " tag
+npm publish --access public --tag beta.$tag
