@@ -1,4 +1,4 @@
-import { AUTO_INJECTABLE_WATERMARK } from '../constants';
+import { AUTO_INJECTABLE_WATERMARK } from '../interfaces/auto-injectable.contant';
 import { AutoInjectable } from './auto-injectable.decorator';
 
 describe('AutoInjectable decorator', () => {
