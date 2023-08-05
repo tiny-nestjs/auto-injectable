@@ -11,11 +11,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
-  },
-  "plugins": [
-    {
-      "transform": "./scripts/generateGlobalProviders.ts"
+    "skipLibCheck": true,
+    "paths": {
+      "@nestjs/auto-injectable": [
+        "src/lib"
+      ]
     }
-  ]
+  }
 }
