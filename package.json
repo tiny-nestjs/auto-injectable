@@ -1,19 +1,20 @@
 {
   "name": "@tiny-nestjs/auto-injectable",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.4",
   "private": false,
   "description": "Enables seamless DI within the Nest Framework.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/lib"
+    "dist"
   ],
   "license": "MIT",
   "scripts": {
     "prestart": "npm run build",
-    "build:lib": "tsc -p ./tsconfig.json",
-    "prepare": "npm run build:lib",
+    "build:lib": "rm -rf dist && mkdir dist && tsc -p tsconfig.lib.json --sourceMap false",
     "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
