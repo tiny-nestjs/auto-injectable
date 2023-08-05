@@ -1,5 +1,6 @@
 import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
+import path from 'path';
 
 // export const ComponentScan = (
 //   options: string[] = ['dist/**/*.js'],
@@ -33,4 +34,12 @@ export function ComponentScan(
       imports: [...originalMetadata.imports, AutoModule.forRootAsync(options)],
     })(target);
   };
+}
+
+function getRootDirectory(): string {
+  const appModulePath = require.main?.filename;
+  if (appModulePath) {
+    return path.join(path.resolve(appModulePath), '..');
+  }
+  throw new Error('Could not determine AppModule path');
 }
