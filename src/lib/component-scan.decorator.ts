@@ -17,7 +17,6 @@ export function ComponentScan(): ClassDecorator {
     class ScannedModule {
       constructor() {
         getAutoInjectableClasses(root).then((autoInjectables) => {
-          console.log('autoInjectables', autoInjectables);
           for (const autoInjectable of autoInjectables) {
             Module({
               providers: [
