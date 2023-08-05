@@ -2,31 +2,15 @@ import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 
-// export const ComponentScan = (
-//   options: string[] = ['dist/**/*.js'],
-// ): ClassDecorator => {
-//   return (target: any) => {
-//     const originalImports = Reflect.getMetadata('imports', target) || [];
-//     const originalControllers =
-//       Reflect.getMetadata('controllers', target) || [];
-//     const originalProviders = Reflect.getMetadata('providers', target) || [];
-//
-//     Module({
-//       imports: [...originalImports, AutoModule.forRootAsync(options)],
-//       controllers: [...originalControllers],
-//       providers: [...originalProviders],
-//     })(target);
-//   };
-// };
-
 export function ComponentScan(
   paths: string[] = [getRootPath()],
 ): ClassDecorator {
   return function (target: any) {
     const originalMetadata = {
-      imports: Reflect.getMetadata('imports', target) || [],
-      controllers: Reflect.getMetadata('controllers', target) || [],
-      providers: Reflect.getMetadata('providers', target) || [],
+      imports: Reflect.getMetadata(MODULE_OPTIONS.IMPORTS, target) || [],
+      controllers:
+        Reflect.getMetadata(MODULE_OPTIONS.CONTROLLERS, target) || [],
+      providers: Reflect.getMetadata(MODULE_OPTIONS.PROVIDERS, target) || [],
     };
 
     const options = paths.map((path) => `${path}/**/*.js`);
@@ -40,3 +24,9 @@ export function ComponentScan(
 function getRootPath(): string {
   return path.join(path.resolve(require.main?.filename), '..') || 'dist';
 }
+
+const MODULE_OPTIONS = {
+  IMPORTS: 'imports',
+  PROVIDERS: 'providers',
+  CONTROLLERS: 'controllers',
+};
