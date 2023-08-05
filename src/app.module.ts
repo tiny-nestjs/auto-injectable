@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AutoModule } from './auto/auto.module';
+import { ComponentScan } from './auto/decorator/ComponenScan';
 
+@ComponentScan()
 @Module({
-  imports: [AutoModule.forRootAsync(['dist/**/*.js'])],
+  imports: [],
   controllers: [AppController],
   providers: [AppService],
 })
