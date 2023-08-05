@@ -9,13 +9,16 @@
     "target": "ES2019",
     "sourceMap": true,
     "outDir": "./dist",
+    "rootDir": "./src/lib",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true,
-    "paths": {
-      "@nestjs/auto-injectable": [
-        "src/lib"
-      ]
-    }
-  }
+    "skipLibCheck": true
+  },
+  "include": [
+    "./src/lib"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
