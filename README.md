@@ -15,8 +15,8 @@ handling of automatic injection of dependencies by the framework.
 
 ## Features
 
-- The `@AutoInjectable()` decorator allows classes to be automatically injectable for DI.
-- The `@ComponentScan()` decorator enables automatic scanning and injection of classes within a module.
+- `@AutoInjectable()` decorator allows classes to be automatically injectable for DI.
+- `@ComponentScan()` decorator enables automatic scanning and injection of classes within a module.
 
 ## Installation
 
@@ -26,10 +26,10 @@ npm install @tiny-nestjs/auto-injectable
 
 ## Usage
 
-1. @ComponentScan() Decorator
+#### 1. `@ComponentScan()`
 
-   Use the @ComponentScan() decorator to enable automatic scanning and injection of classes within a module:
-
+   Use `@ComponentScan()` decorator to enable automatic scanning and injection of classes within a module:
+   
     ```
     import { Module } from '@nestjs/common';
     import { AppService } from './app.service';
@@ -45,12 +45,12 @@ npm install @tiny-nestjs/auto-injectable
     export class AppModule {}
     ```
 
-   By applying the @ComponentScan() decorator to the AppModule class, the module will automatically scan for classes and
+   By applying the `@ComponentScan()` decorator to the AppModule class, Nest will automatically scan for classes and
    inject necessary dependencies.
 
-2. @AutoInjectable() Decorator
+#### 2. `@AutoInjectable()`
 
-   The @AutoInjectable() decorator makes a class injectable for DI:
+   Use `@AutoInjectable()` decorator to make a class injectable for DI:
 
     ```
     import { AutoInjectable } from '@nestjs/auto-injectable';
@@ -61,7 +61,7 @@ npm install @tiny-nestjs/auto-injectable
     }
     ```
 
-   By applying the @AutoInjectable() decorator to the CatService class, the class can now be
+   On this case, by applying `@AutoInjectable()` decorator to the CatService class, the class can now be
    automatically injected into other modules.
 
 ## Contribution
