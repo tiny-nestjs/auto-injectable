@@ -26,7 +26,7 @@ npm install @tiny-nestjs/auto-injectable
 
 ## Usage
 
-#### 1. `@ComponentScan()`
+**1. `@ComponentScan()`**
 
    Use `@ComponentScan()` decorator to enable automatic scanning and injection of classes within a module:
    
@@ -48,7 +48,7 @@ npm install @tiny-nestjs/auto-injectable
    By applying the `@ComponentScan()` decorator to the AppModule class, Nest will automatically scan for classes and
    inject necessary dependencies.
 
-#### 2. `@AutoInjectable()`
+**2. `@AutoInjectable()`**
 
    Use `@AutoInjectable()` decorator to make a class injectable for DI:
 
