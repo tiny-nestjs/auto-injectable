@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AUTO_INJECTABLE_WATERMARK } from '../interfaces/auto-injectable.constant';
+import { AUTO_INJECTABLE_WATERMARK } from '../interfaces';
 
 export function AutoInjectable(): ClassDecorator {
   return (target: object) => {
