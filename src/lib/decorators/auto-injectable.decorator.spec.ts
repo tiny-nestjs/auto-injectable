@@ -1,5 +1,5 @@
-import { AUTO_INJECTABLE_WATERMARK } from '../constants';
-import { AutoInjectable } from './auto.injectable.decorator';
+import { AUTO_INJECTABLE_WATERMARK } from '../interfaces/auto-injectable.constant';
+import { AutoInjectable } from './auto-injectable.decorator';
 
 describe('AutoInjectable decorator', () => {
   @AutoInjectable()

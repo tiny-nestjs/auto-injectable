@@ -1,9 +1,7 @@
-// app.module.ts
-
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
-import { ComponentScan } from './auto/decorator/component-scan.decorator';
+import { ComponentScan } from './lib/decorators/component-scan.decorator';
 
 @ComponentScan()
 @Module({

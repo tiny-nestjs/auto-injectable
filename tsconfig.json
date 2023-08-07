@@ -12,10 +12,5 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true
-  },
-  "plugins": [
-    {
-      "transform": "./scripts/generateGlobalProviders.ts"
-    }
-  ]
+  }
 }

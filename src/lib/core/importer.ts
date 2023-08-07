@@ -1,6 +1,6 @@
 import { glob } from 'glob';
 import { resolve } from 'path';
-import { AUTO_INJECTABLE_WATERMARK } from '../constants';
+import { AUTO_INJECTABLE_WATERMARK } from '../interfaces/auto-injectable.constant';
 
 type ClassType = new (...args: any[]) => any;
 
