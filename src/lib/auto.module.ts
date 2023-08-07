@@ -1,5 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { Importer } from './core/importer';
+import { Importer } from './core';
 
 @Module({})
 export class AutoModule {
