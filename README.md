@@ -64,7 +64,7 @@ npm install @tiny-nestjs/auto-injectable
 
    In this case, by applying the @AutoInjectable() decorator to the CatService class, the class has become injectable, allowing it to be injected into other modules without the need for module definitions.
 
-**3. Inject your class**
+**3. Inject**
 
    ```
    @Controller()
