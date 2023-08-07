@@ -1,1 +1,1 @@
-export * from './auto-injectable.contant';
+export * from './auto-injectable.constant';
