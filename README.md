@@ -12,6 +12,7 @@
 AutoInjectable is a utility library designed to simplify the usage of dependency injection
 in [Nest](https://github.com/nestjs/nest). It enables seamless
 handling of automatic injection of dependencies by the framework.
+With this library, you can inject dependencies into classes without the need for module definitions.
 
 ## Features
 
@@ -61,8 +62,23 @@ npm install @tiny-nestjs/auto-injectable
     }
     ```
 
-   On this case, by applying `@AutoInjectable()` decorator to the CatService class, the class can now be
-   automatically injected into other modules.
+   In this case, by applying the @AutoInjectable() decorator to the CatService class, the class has become injectable, allowing it to be injected into other modules without the need for module definitions.
+
+**3. Inject your class**
+
+   ```
+   @Controller()
+   export class AppController {
+     constructor(private readonly catService: CatService) {}
+   
+     @Get('cats')
+     getCats() {
+       return this.catService.findAll();
+     }
+   }
+   ```
+
+   The class with the @AutoInjectable() decorator has been successfully injected.
 
 ## Contribution
 
