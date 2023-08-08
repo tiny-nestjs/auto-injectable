@@ -20,6 +20,6 @@ body:
       description: Before raising the issue, please check our checklists below
       options:
         - label: Are you add enough explanations for issue ?
-          require: true
+          required: true
         - label: Did you check if there are other issues with the same content as this issue ?
-          require: true
+          required: true
