@@ -12,7 +12,7 @@
   "scripts": {
     "prepack": "npm run build:lib",
     "prestart": "npm run build",
-    "build:lib": "npm cache clean --force && tsc -p tsconfig.lib.json --sourceMap false",
+    "build:lib": "npm cache clean --force && tsc -p tsconfig.lib.json --listEmittedFiles",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
