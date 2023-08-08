@@ -1,0 +1,25 @@
+name: Discussion
+description: Discuss something about 'auto-injectable' !
+labels: [discussion]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome your discussion to our library `auto-injectable`!
+  - type: textarea
+    id: discussion-textarea
+    attributes:
+      label: Discussion
+      description: 'Say something about our library!'
+    validations:
+      required: true
+  - type: checkboxes
+    id: discussion-checkboxes
+    attributes:
+      label: Checklist
+      description: Before raising the issue, please check our checklists below
+      options:
+        - label: Are you add enough explanations for issue ?
+          require: true
+        - label: Did you check if there are other issues with the same content as this issue ?
+          require: true
