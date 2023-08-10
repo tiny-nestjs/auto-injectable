@@ -27,7 +27,7 @@ export class Importer {
     const providers = Object.values(exports)
       .filter((value) => typeof value === 'function')
       .filter((value) =>
-        Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, value),
+        Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, value as ClassType),
       ) as ClassType[];
 
     return {

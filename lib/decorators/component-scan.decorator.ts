@@ -22,7 +22,7 @@ export function ComponentScan(
 }
 
 function getRootPath(): string {
-  return path.join(path.resolve(require.main?.filename), '..') || 'dist';
+  return path.join(path.resolve(require.main?.filename ?? ''), '..') || 'dist';
 }
 
 const MODULE_OPTIONS = {
