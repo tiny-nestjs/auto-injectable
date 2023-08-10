@@ -1,5 +1,5 @@
 import { Cat } from './cat.interface';
-import { AutoInjectable } from '../../lib';
+import { AutoInjectable } from '../../../lib';
 
 @AutoInjectable()
 export class CatService {
