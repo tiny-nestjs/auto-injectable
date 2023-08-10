@@ -3,12 +3,13 @@ import { Importer } from './core';
 
 @Module({})
 export class AutoModule {
-  static async forRootAsync(string: string[]): Promise<DynamicModule> {
-    const autoInjectable = await Importer.load(string);
+  static async forRootAsync(patterns: string[]): Promise<DynamicModule> {
+    const autoInjectable = await Importer.loadProviders(patterns);
+    const autoController = await Importer.loadControllers(patterns);
 
     return {
       module: AutoModule,
-      imports: [],
+      controllers: [...autoController.controllers],
       providers: [...autoInjectable.providers],
       exports: [...autoInjectable.providers],
     };
