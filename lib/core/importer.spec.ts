@@ -10,7 +10,7 @@ describe('Importer', () => {
   it('should import file', async () => {
     const importer = new Importer(['./test/fixture.ts']);
     const pathName = await importer.matchGlob();
-    const result = await importer.importFile(pathName[0]);
+    const result = await importer.importProvider(pathName[0]);
     console.log(result);
   });
 });

@@ -398,3 +398,7 @@ Temporary Items
 dist
 .webpack
 .serverless/**/*.zip
+
+# Local Test
+tsconfig.build.json
+src/
