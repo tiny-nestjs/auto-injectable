@@ -1,6 +1,7 @@
 import { glob } from 'glob';
 import { resolve } from 'path';
 import { AUTO_CONTROLLER_WATERMARK, AUTO_INJECTABLE_WATERMARK } from '../interfaces';
+import 'reflect-metadata';
 
 type ClassType = new (...args: any[]) => any;
 
@@ -11,8 +12,6 @@ interface AutoClasses {
 
 export class Importer {
   private static instance: Importer | null = null;
-
-  constructor() {}
 
   static getInstance(): Importer {
     if (!Importer.instance) {
