@@ -1,26 +1,21 @@
 import { Controller, ControllerOptions } from '@nestjs/common';
 import { AUTO_CONTROLLER_WATERMARK } from '../interfaces';
 
-interface AutoControllerDecorator {
-  (prefix: string): ClassDecorator;
-
-  (prefixOrOptions?: string[] | ControllerOptions): ClassDecorator;
-}
-
-export const AutoController: AutoControllerDecorator = function AutoController(
-  prefixOrOptions?: string | string[] | ControllerOptions,
-): ClassDecorator {
+export function AutoController(prefixOrOptions?: string | string[] | ControllerOptions) {
   return (target: object) => {
     Reflect.defineMetadata(AUTO_CONTROLLER_WATERMARK, true, target);
 
-    const controller = PREFIX_LOOKUP[typeof prefixOrOptions];
-    const decorator = controller(prefixOrOptions);
-    decorator(target as new (...args: any[]) => any);
+    /**
+     * Listing of if statements due to `@Controller` overloading
+     */
+    if (typeof prefixOrOptions === 'undefined') {
+      return Controller()(target as new (...args: any[]) => any);
+    }
+    if (typeof prefixOrOptions === 'string' || Array.isArray(prefixOrOptions)) {
+      return Controller(prefixOrOptions)(target as new (...args: any[]) => any);
+    }
+    if (typeof prefixOrOptions === 'object') {
+      return Controller(prefixOrOptions)(target as new (...args: any[]) => any);
+    }
   };
-};
-
-const PREFIX_LOOKUP: { [key: string]: (prefixOrOptions?: any) => any } = {
-  undefined: Controller(),
-  string: (prefix: string) => Controller(prefix),
-  object: (options: ControllerOptions) => Controller(options),
-};
+}
