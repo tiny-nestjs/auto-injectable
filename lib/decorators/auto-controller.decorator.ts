@@ -17,9 +17,10 @@ export const AutoController: AutoControllerDecorator = function AutoController(
      * the presence of the `@Controller()` decorator is essential
      * for defining request-handling controller classes.
      */
-    const decorator = typeof prefixOrOptions === 'string'
-      ? Controller(prefixOrOptions)
-      : Controller(prefixOrOptions as ControllerOptions);
+    const decorator =
+      typeof prefixOrOptions === 'string'
+        ? Controller(prefixOrOptions)
+        : Controller(prefixOrOptions as ControllerOptions);
     decorator(target as new (...args: any[]) => any);
   };
 };
