@@ -3,7 +3,7 @@
 </p>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/npm-v0.0.1-blue" alt="npm version">
+  <img src="https://img.shields.io/badge/npm-v0.1.0-blue" alt="npm version">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </div>
 
@@ -29,56 +29,59 @@ npm install @tiny-nestjs/auto-injectable
 
 **1. `@ComponentScan()`**
 
-   Use `@ComponentScan()` decorator to enable automatic scanning and injection of classes within a module:
-   
+Use `@ComponentScan()` decorator to enable automatic scanning and injection of classes within a module:
+
    ```typescript
   import { Module } from '@nestjs/common';
-  import { AppService } from './app.service';
-  import { AppController } from './app.controller';
-  import { ComponentScan } from '@nestjs/auto-injectable';
-  
-  @ComponentScan()
-  @Module({
-      imports: [],
-      controllers: [AppController],
-      providers: [AppService],
-  })
-  export class AppModule {}
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { ComponentScan } from '@nestjs/auto-injectable';
+
+@ComponentScan()
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {
+}
   ``` 
 
-   By applying the `@ComponentScan()` decorator to the AppModule class, Nest will automatically scan for classes and
-   inject necessary dependencies.
+By applying the `@ComponentScan()` decorator to the AppModule class, Nest will automatically scan for classes and
+inject necessary dependencies.
 
 **2. `@AutoInjectable()`**
 
-   Use `@AutoInjectable()` decorator to make a class injectable for DI:
+Use `@AutoInjectable()` decorator to make a class injectable for DI:
 
   ```typescript
   import { AutoInjectable } from '@nestjs/auto-injectable';
-  
-  @AutoInjectable()
-  export class CatService {
-      // ...
-  }
+
+@AutoInjectable()
+export class CatService {
+  // ...
+}
   ```
 
-   In this case, by applying the @AutoInjectable() decorator to the CatService class, the class has become injectable, allowing it to be injected into other modules without the need for module definitions.
+In this case, by applying the @AutoInjectable() decorator to the CatService class, the class has become injectable,
+allowing it to be injected into other modules without the need for module definitions.
 
 **3. Inject**
 
    ```typescript
    @Controller()
-   export class AppController {
-     constructor(private readonly catService: CatService) {}
-   
-     @Get('cats')
-     getCats() {
-       return this.catService.findAll();
-     }
-   }
+export class AppController {
+  constructor(private readonly catService: CatService) {
+  }
+
+  @Get('cats')
+  getCats() {
+    return this.catService.findAll();
+  }
+}
    ```
 
-   The class with the @AutoInjectable() decorator has been successfully injected.
+The class with the @AutoInjectable() decorator has been successfully injected.
 
 ## Contribution
 
