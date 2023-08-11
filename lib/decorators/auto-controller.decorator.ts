@@ -1,7 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { Controller, ControllerOptions } from "@nestjs/common";
 import { AUTO_CONTROLLER_WATERMARK } from '../interfaces';
 
-export function AutoController(prefix: string | string[]): ClassDecorator {
+export function AutoController(
+  prefixOrOptions?: string | string[] | ControllerOptions,
+): ClassDecorator {
   return (target: object) => {
     Reflect.defineMetadata(AUTO_CONTROLLER_WATERMARK, true, target);
 
@@ -10,6 +12,6 @@ export function AutoController(prefix: string | string[]): ClassDecorator {
      * the presence of the `@Controller()` decorator is essential
      * for defining request-handling controller classes.
      */
-    Controller(prefix)(target as new (...args: any[]) => any);
+    Controller(prefixOrOptions)(target as new (...args: any[]) => any);
   };
 }
