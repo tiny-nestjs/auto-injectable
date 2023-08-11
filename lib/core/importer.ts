@@ -15,17 +15,17 @@ export class Importer {
   static async load(patterns: string[]): Promise<AutoClasses> {
     const importer = new Importer(patterns);
     const pathNames = await importer.matchGlob();
-    const results = await Promise.all(pathNames.map((pathName) => importer.import(pathName)));
-    return results.reduce(
-      (merged, result) => ({
-        providers: [...merged.providers, ...result.providers],
-        controllers: [...merged.controllers, ...result.controllers],
+    const foundClasses = await Promise.all(pathNames.map((pathName) => importer.scan(pathName)));
+    return foundClasses.reduce(
+      (merged, found) => ({
+        providers: [...merged.providers, ...found.providers],
+        controllers: [...merged.controllers, ...found.controllers],
       }),
       { providers: [], controllers: [] } as AutoClasses,
     );
   }
 
-  private async import(pathName: string): Promise<AutoClasses> {
+  private async scan(pathName: string): Promise<AutoClasses> {
     const exports: Record<string, unknown> = await import(pathName);
     const autoClasses = Object.values(exports).filter((value) => typeof value === 'function') as ClassType[];
 
