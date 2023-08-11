@@ -10,11 +10,20 @@ interface AutoClasses {
 }
 
 export class Importer {
-  constructor(private readonly patterns: string[]) {}
+  private static instance: Importer | null = null;
+
+  constructor() {}
+
+  static getInstance(): Importer {
+    if (!Importer.instance) {
+      Importer.instance = new Importer();
+    }
+    return Importer.instance;
+  }
 
   static async load(patterns: string[]): Promise<AutoClasses> {
-    const importer = new Importer(patterns);
-    const pathNames = await importer.matchGlob();
+    const importer = Importer.getInstance();
+    const pathNames = await importer.matchGlob(patterns);
     const foundClasses = await Promise.all(pathNames.map((pathName) => importer.scan(pathName)));
     return foundClasses.reduce(
       (merged, found) => ({
@@ -39,8 +48,8 @@ export class Importer {
     );
   }
 
-  private async matchGlob() {
-    const globs = this.patterns.map((pattern) => glob(resolve(process.cwd(), pattern)));
+  private async matchGlob(patterns: string[]) {
+    const globs = patterns.map((pattern) => glob(resolve(process.cwd(), pattern)));
     return (await Promise.all(globs)).flat();
   }
 }
