@@ -1,74 +1,46 @@
 import { glob } from 'glob';
 import { resolve } from 'path';
-import {
-  AUTO_CONTROLLER_WATERMARK,
-  AUTO_INJECTABLE_WATERMARK,
-} from '../interfaces';
+import { AUTO_CONTROLLER_WATERMARK, AUTO_INJECTABLE_WATERMARK } from '../interfaces';
 
 type ClassType = new (...args: any[]) => any;
 
-export interface AutoProviders {
+interface AutoClasses {
   providers: ClassType[];
-}
-
-export interface AutoControllers {
   controllers: ClassType[];
 }
 
-// TODO: refactoring duplicate code
 export class Importer {
   constructor(private readonly patterns: string[]) {}
 
-  static async loadProviders(patterns: string[]): Promise<AutoProviders> {
+  static async load(patterns: string[]): Promise<AutoClasses> {
     const importer = new Importer(patterns);
     const pathNames = await importer.matchGlob();
-    const results = await Promise.all(
-      pathNames.map((pathName) => importer.importProvider(pathName)),
+    const results = await Promise.all(pathNames.map((pathName) => importer.import(pathName)));
+    return results.reduce(
+      (merged, result) => ({
+        providers: [...merged.providers, ...result.providers],
+        controllers: [...merged.controllers, ...result.controllers],
+      }),
+      { providers: [], controllers: [] } as AutoClasses,
     );
-    return {
-      providers: results.flatMap((result) => result.providers),
-    };
   }
 
-  static async loadControllers(patterns: string[]): Promise<AutoControllers> {
-    const importer = new Importer(patterns);
-    const pathNames = await importer.matchGlob();
-    const results = await Promise.all(
-      pathNames.map((pathName) => importer.importController(pathName)),
-    );
-    return {
-      controllers: results.flatMap((result) => result.controllers),
-    };
-  }
-
-  public async importProvider(pathName: string): Promise<AutoProviders> {
+  private async import(pathName: string): Promise<AutoClasses> {
     const exports: Record<string, unknown> = await import(pathName);
-    const providers = Object.values(exports)
-      .filter((value) => typeof value === 'function')
-      .filter((value) =>
-        Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, value as ClassType),
-      ) as ClassType[];
-    return {
-      providers,
-    };
-  }
+    const autoClasses = Object.values(exports).filter((value) => typeof value === 'function') as ClassType[];
 
-  public async importController(pathName: string): Promise<AutoControllers> {
-    const exports: Record<string, unknown> = await import(pathName);
-    const controllers = Object.values(exports)
-      .filter((value) => typeof value === 'function')
-      .filter((value) =>
-        Reflect.hasMetadata(AUTO_CONTROLLER_WATERMARK, value as ClassType),
-      ) as ClassType[];
-    return {
-      controllers,
-    };
-  }
-
-  public async matchGlob() {
-    const globs = this.patterns.map((pattern) =>
-      glob(resolve(process.cwd(), pattern)),
+    return autoClasses.reduce(
+      (result: AutoClasses, value: ClassType) => {
+        Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, value) && result.providers.push(value);
+        Reflect.hasMetadata(AUTO_CONTROLLER_WATERMARK, value) && result.controllers.push(value);
+        return result;
+      },
+      { providers: [], controllers: [] },
     );
+  }
+
+  private async matchGlob() {
+    const globs = this.patterns.map((pattern) => glob(resolve(process.cwd(), pattern)));
     return (await Promise.all(globs)).flat();
   }
 }
