@@ -1,12 +1,12 @@
 import { Controller, ControllerOptions } from '@nestjs/common';
 import { AUTO_CONTROLLER_WATERMARK } from '../interfaces';
 
-interface AutoControllerFn {
+interface AutoControllerDecorator {
   (prefix: string): ClassDecorator;
   (prefixOrOptions: string[] | ControllerOptions): ClassDecorator;
 }
 
-export const AutoController: AutoControllerFn = function AutoController(
+export const AutoController: AutoControllerDecorator = function AutoController(
   prefixOrOptions: string | string[] | ControllerOptions,
 ): ClassDecorator {
   return (target: object) => {
