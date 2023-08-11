@@ -1,7 +1,6 @@
 import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
 import * as path from 'path';
-import 'reflect-metadata';
 
 export function ComponentScan(paths: string[] = [getRootPath()]): ClassDecorator {
   return function (target: any) {

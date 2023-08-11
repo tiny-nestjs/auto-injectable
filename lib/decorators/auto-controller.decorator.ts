@@ -1,6 +1,5 @@
 import { Controller, ControllerOptions } from '@nestjs/common';
 import { AUTO_CONTROLLER_WATERMARK } from '../interfaces';
-import 'reflect-metadata';
 
 interface AutoControllerDecorator {
   (prefix: string): ClassDecorator;
