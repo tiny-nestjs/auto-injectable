@@ -10,10 +10,10 @@ export function ComponentScan(paths: string[] = [getRootPath()]): ClassDecorator
       providers: Reflect.getMetadata(MODULE_OPTIONS.PROVIDERS, target) || [],
     };
 
-    const options = paths.map((path) => `${path}/**/*.js`);
+    const patterns = paths.map((path) => `${path}/**/*.js`);
     Module({
       ...originalMetadata,
-      imports: [...originalMetadata.imports, AutoModule.forRootAsync(options)],
+      imports: [...originalMetadata.imports, AutoModule.forRootAsync(patterns)],
     })(target);
   };
 }

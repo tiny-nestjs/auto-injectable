@@ -1,26 +1,21 @@
 import { Controller, ControllerOptions } from '@nestjs/common';
 import { AUTO_CONTROLLER_WATERMARK } from '../interfaces';
 
-interface AutoControllerDecorator {
-  (prefix: string): ClassDecorator;
-  (prefixOrOptions: string[] | ControllerOptions): ClassDecorator;
-}
-
-export const AutoController: AutoControllerDecorator = function AutoController(
-  prefixOrOptions: string | string[] | ControllerOptions,
-): ClassDecorator {
+export function AutoController(prefixOrOptions?: string | string[] | ControllerOptions) {
   return (target: object) => {
     Reflect.defineMetadata(AUTO_CONTROLLER_WATERMARK, true, target);
 
     /**
-     * Unlike `@Injectable()`, in Nest,
-     * the presence of the `@Controller()` decorator is essential
-     * for defining request-handling controller classes.
+     * Listing of if statements due to `@Controller` overloading
      */
-    const decorator =
-      typeof prefixOrOptions === 'string'
-        ? Controller(prefixOrOptions)
-        : Controller(prefixOrOptions as ControllerOptions);
-    decorator(target as new (...args: any[]) => any);
+    if (typeof prefixOrOptions === 'undefined') {
+      return Controller()(target as new (...args: any[]) => any);
+    }
+    if (typeof prefixOrOptions === 'string' || Array.isArray(prefixOrOptions)) {
+      return Controller(prefixOrOptions)(target as new (...args: any[]) => any);
+    }
+    if (typeof prefixOrOptions === 'object') {
+      return Controller(prefixOrOptions)(target as new (...args: any[]) => any);
+    }
   };
-};
+}

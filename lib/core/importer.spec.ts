@@ -1,16 +1,15 @@
 import { Importer } from './importer';
 
 describe('Importer', () => {
+  const paths = ['./test/fixture.ts'];
+
   it('should get path of patterns', async () => {
-    const importer = new Importer(['./test/fixture.ts']);
-    const result = await importer.matchGlob();
+    const result = await Importer.load(paths);
     console.log(result);
   });
 
   it('should import file', async () => {
-    const importer = new Importer(['./test/fixture.ts']);
-    const pathName = await importer.matchGlob();
-    const result = await importer.importProvider(pathName[0]);
+    const result = await Importer.load(paths);
     console.log(result);
   });
 });

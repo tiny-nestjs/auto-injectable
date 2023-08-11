@@ -1,6 +1,6 @@
 {
   "name": "@tiny-nestjs/auto-injectable",
-  "version": "0.0.1-beta.0",
+  "version": "0.2.0-beta.0",
   "private": false,
   "description": "Enables seamless DI within the Nest Framework.",
   "main": "dist/index.js",
@@ -35,6 +35,7 @@
     "@nestjs/common": "^10.1.3",
     "@nestjs/core": "^10.1.3",
     "@nestjs/platform-express": "^10.1.3",
+    "@types/reflect-metadata": "^0.1.0",
     "glob": "^10.3.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
