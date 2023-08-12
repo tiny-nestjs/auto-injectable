@@ -1,6 +1,6 @@
 {
   "name": "@tiny-nestjs/auto-injectable",
-  "version": "0.2.1",
+  "version": "0.2.11-beta.0",
   "private": false,
   "description": "Enables seamless DI within the Nest Framework.",
   "main": "dist/index.js",
@@ -21,6 +21,10 @@
     "start:debug": "nest start --debug --watch",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install"
+  },
+  "homepage": "https://github.com/tiny-nestjs/auto-injectable",
+  "bugs": {
+    "url": "https://github.com/tiny-nestjs/auto-injectable/issues"
   },
   "keywords": [
     "nest",
