@@ -3,7 +3,7 @@
 </p>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/npm-v0.2.0-blue" alt="npm version">
+  <img src="https://img.shields.io/badge/npm-v0.2.1-blue" alt="npm version">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </div>
 
