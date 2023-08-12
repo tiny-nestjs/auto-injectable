@@ -16,8 +16,9 @@ With this library, you can inject dependencies into classes without the need for
 
 ## Features
 
-- `@AutoInjectable()` decorator allows classes to be automatically injectable for DI.
 - `@ComponentScan()` decorator enables automatic scanning and injection of classes within a module.
+- `@AutoInjectable()` decorator allows classes to be automatically injectable for DI.
+- `@AutoController()` decorator automatically registers controllers.
 
 ## Installation
 
@@ -29,19 +30,15 @@ npm install @tiny-nestjs/auto-injectable
 
 **1. `@ComponentScan()`**
 
-Use `@ComponentScan()` decorator to enable automatic scanning and injection of classes within a module:
-
-```typescript
+```ts
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
-import { ComponentScan } from '@nestjs/auto-injectable';
+import { ComponentScan } from '@tiny-nestjs/auto-injectable';
 
 @ComponentScan()
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {
 }
@@ -52,10 +49,8 @@ inject necessary dependencies.
 
 **2. `@AutoInjectable()`**
 
-Use `@AutoInjectable()` decorator to make a class injectable for DI:
-
-```typescript
-import { AutoInjectable } from '@nestjs/auto-injectable';
+```ts
+import { AutoInjectable } from '@tiny-nestjs/auto-injectable';
 
 @AutoInjectable()
 export class CatService {
@@ -66,11 +61,13 @@ export class CatService {
 In this case, by applying the `@AutoInjectable()` decorator to the CatService class, the class has become injectable,
 allowing it to be injected into other modules without the need for module definitions.
 
-**3. Inject**
+**3. `@AutoController()` and dependency injection**
 
-```typescript
- @Controller()
-export class AppController {
+```ts
+import { AutoController } from '@tiny-nestjs/auto-injectable';
+
+@AutoController()
+export class CatController {
   constructor(private readonly catService: CatService) {
   }
 
@@ -81,13 +78,19 @@ export class AppController {
 }
 ```
 
-The class with the `@AutoInjectable()` decorator has been successfully injected.
+The class with the `@AutoInjectable()` decorator has been successfully injected and `/cats` api can be accessed by
+applying `@AutoController()` on `CatController` service.
+
+| You can see actual [project example](https://github.com/tiny-nestjs/auto-injectable-example) here. |
+|----------------------------------------------------------------------------------------------------|
 
 ## Contribution
 
-To contribute to this library, fork the GitHub repository, make your changes, and create a pull request. Your
+To contribute to this library, fork the [GitHub repository](https://github.com/tiny-nestjs/auto-injectable), make your
+changes, and create a pull request. Your
 contributions are highly appreciated. If you find any improvements or bugs, please open an issue.
 
 ## License
 
-`@tiny-nestjs/auto-injectable` is distributed under the MIT license.
+`@tiny-nestjs/auto-injectable` is distributed under
+the [MIT license](https://github.com/tiny-nestjs/auto-injectable/blob/main/LICENSE).
