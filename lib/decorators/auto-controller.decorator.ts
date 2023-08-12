@@ -6,7 +6,7 @@ export function AutoController(prefixOrOptions?: string | string[] | ControllerO
     Reflect.defineMetadata(AUTO_CONTROLLER_WATERMARK, true, target);
 
     /**
-     * Listing of if statements due to `@Controller` overloading
+     * Listing of if statements due to `@Controller` overloading.
      */
     if (typeof prefixOrOptions === 'undefined') {
       return Controller()(target as new (...args: any[]) => any);
