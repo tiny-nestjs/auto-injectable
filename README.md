@@ -9,7 +9,8 @@
 
 ## Description
 
-AutoInjectable is a utility library designed to simplify the usage of dependency injection
+[AutoInjectable](https://github.com/tiny-nestjs/auto-injectable) is a utility library designed to simplify the usage of
+dependency injection
 in [Nest](https://github.com/nestjs/nest). It enables seamless
 handling of automatic injection of dependencies by the framework.
 With this library, you can inject dependencies into classes without the need for module definitions.
@@ -24,6 +25,10 @@ With this library, you can inject dependencies into classes without the need for
 
 ```bash
 npm install @tiny-nestjs/auto-injectable
+```
+
+```bash
+yarn add @tiny-nestjs/auto-injectable
 ```
 
 ## Usage
