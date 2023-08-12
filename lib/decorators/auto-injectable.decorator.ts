@@ -1,9 +1,14 @@
 import { AUTO_INJECTABLE_WATERMARK } from '../interfaces';
-import { INJECTABLE_WATERMARK } from '@nestjs/common/constants';
+import { Injectable } from '@nestjs/common';
+import { InjectableOptions } from '@nestjs/common/decorators/core/injectable.decorator';
 
-export function AutoInjectable(): ClassDecorator {
+export function AutoInjectable(options?: InjectableOptions) {
   return (target: object) => {
-    Reflect.defineMetadata(INJECTABLE_WATERMARK, true, target);
     Reflect.defineMetadata(AUTO_INJECTABLE_WATERMARK, true, target);
+
+    /**
+     * `@Injectable` decorator only has one type.
+     */
+    return Injectable(options)(target as new (...args: any[]) => any);
   };
 }
