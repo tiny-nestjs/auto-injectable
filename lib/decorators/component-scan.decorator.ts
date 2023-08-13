@@ -2,7 +2,7 @@ import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 
-export function ComponentScan(paths: string[] = [getRootPath()]): ClassDecorator {
+export function ComponentScan(paths = [getRootGlobPath()]): ClassDecorator {
   return function (target: any) {
     const originalMetadata = {
       imports: Reflect.getMetadata(MODULE_OPTIONS.IMPORTS, target) || [],
@@ -10,16 +10,19 @@ export function ComponentScan(paths: string[] = [getRootPath()]): ClassDecorator
       providers: Reflect.getMetadata(MODULE_OPTIONS.PROVIDERS, target) || [],
     };
 
-    const patterns = paths.map((path) => `${path}/**/*.js`);
+    const module = AutoModule.forRoot(paths);
     Module({
       ...originalMetadata,
-      imports: [...originalMetadata.imports, AutoModule.forRootAsync(patterns)],
+      imports: [...originalMetadata.imports],
+      controllers: [...originalMetadata.controllers, ...(module.controllers ?? [])],
+      providers: [...originalMetadata.providers, ...(module.providers ?? [])],
     })(target);
   };
 }
 
-function getRootPath(): string {
-  return path.join(path.resolve(require.main?.filename ?? ''), '..') || 'dist';
+function getRootGlobPath(): string {
+  const rootPath = path.join(path.resolve(require.main?.filename ?? ''), '..') || 'dist';
+  return `${rootPath}/**/*.js`;
 }
 
 const MODULE_OPTIONS = {
