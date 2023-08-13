@@ -1,6 +1,6 @@
 {
   "name": "@tiny-nestjs/auto-injectable",
-  "version": "0.3.0-beta.0",
+  "version": "0.3.0",
   "private": false,
   "description": "Enables seamless DI within the Nest Framework.",
   "main": "dist/index.js",
