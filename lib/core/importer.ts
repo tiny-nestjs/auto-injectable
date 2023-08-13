@@ -11,7 +11,7 @@ interface AutoClasses {
 }
 
 export class Importer {
-  private static instance: Importer | null = null;
+  private static instance: Importer;
 
   static getInstance(): Importer {
     if (!Importer.instance) {

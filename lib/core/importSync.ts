@@ -12,7 +12,7 @@ interface AutoClasses {
 }
 
 export class ImporterSync {
-  private static instance: ImporterSync | null = null;
+  private static instance: ImporterSync;
 
   static getInstance(): ImporterSync {
     if (!ImporterSync.instance) {
