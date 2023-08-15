@@ -8,6 +8,7 @@ export function ComponentScan(paths = [getRootGlobPath()]): ClassDecorator {
       imports: Reflect.getMetadata(MODULE_OPTIONS.IMPORTS, target) || [],
       controllers: Reflect.getMetadata(MODULE_OPTIONS.CONTROLLERS, target) || [],
       providers: Reflect.getMetadata(MODULE_OPTIONS.PROVIDERS, target) || [],
+      exports: Reflect.getMetadata(MODULE_OPTIONS.EXPORTS, target) || [],
     };
 
     const module = AutoModule.forRoot(paths);
@@ -16,6 +17,7 @@ export function ComponentScan(paths = [getRootGlobPath()]): ClassDecorator {
       imports: [...originalMetadata.imports],
       controllers: [...originalMetadata.controllers, ...(module.controllers ?? [])],
       providers: [...originalMetadata.providers, ...(module.providers ?? [])],
+      exports: [...originalMetadata.exports, ...(module.providers ?? [])],
     })(target);
   };
 }
@@ -29,4 +31,5 @@ const MODULE_OPTIONS = {
   IMPORTS: 'imports',
   PROVIDERS: 'providers',
   CONTROLLERS: 'controllers',
+  EXPORTS: 'exports',
 };
