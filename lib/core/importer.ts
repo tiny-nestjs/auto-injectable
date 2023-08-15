@@ -1,4 +1,5 @@
-import { glob } from 'glob';
+/* eslint-disable @typescript-eslint/no-var-requires */
+import { globSync } from 'glob';
 import { resolve } from 'path';
 import { AUTO_CONTROLLER_WATERMARK, AUTO_INJECTABLE_WATERMARK } from '../interfaces';
 import 'reflect-metadata';
@@ -20,10 +21,10 @@ export class Importer {
     return Importer.instance;
   }
 
-  static async load(patterns: string[]): Promise<AutoClasses> {
+  static load(patterns: string[]): AutoClasses {
     const importer = Importer.getInstance();
-    const pathNames = await importer.matchGlob(patterns);
-    const foundClasses = await Promise.all(pathNames.map((pathName) => importer.scan(pathName)));
+    const pathNames = importer.matchGlob(patterns);
+    const foundClasses = pathNames.map((pathName) => importer.scan(pathName));
     return foundClasses.reduce(
       (merged, found) => ({
         providers: [...merged.providers, ...found.providers],
@@ -33,8 +34,8 @@ export class Importer {
     );
   }
 
-  private async scan(pathName: string): Promise<AutoClasses> {
-    const exports: Record<string, unknown> = await import(pathName);
+  private scan(pathName: string): AutoClasses {
+    const exports: Record<string, unknown> = require(pathName);
     const autoClasses = Object.values(exports).filter((value) => typeof value === 'function') as ClassType[];
 
     return autoClasses.reduce(
@@ -47,8 +48,12 @@ export class Importer {
     );
   }
 
-  private async matchGlob(patterns: string[]) {
-    const globs = patterns.map((pattern) => glob(resolve(process.cwd(), pattern)));
-    return (await Promise.all(globs)).flat();
+  private matchGlob(patterns: string[]) {
+    const globs = patterns.map((pattern) =>
+      globSync(resolve(process.cwd(), pattern), {
+        ignore: ['**/node_modules/**'],
+      }),
+    );
+    return globs.flat();
   }
 }
