@@ -8,7 +8,7 @@ import { DynamicModule } from '@nestjs/common/interfaces/modules/dynamic-module.
 import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
 import { Abstract } from '@nestjs/common/interfaces/abstract.interface';
 
-export type ClassType = new (...args: any[]) => any;
+type ClassType = new (...args: any[]) => any;
 
 interface AutoClasses {
   providers: Provider[];
