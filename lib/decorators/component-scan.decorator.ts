@@ -2,9 +2,8 @@ import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 
-export function ComponentScan(paths = []): ClassDecorator {
+export function ComponentScan(paths?: string[]): ClassDecorator {
   return function (target: any) {
-    const path = getFolderPath();
     const originalMetadata = {
       imports: Reflect.getMetadata(MODULE_OPTIONS.IMPORTS, target) || [],
       controllers: Reflect.getMetadata(MODULE_OPTIONS.CONTROLLERS, target) || [],
@@ -12,7 +11,8 @@ export function ComponentScan(paths = []): ClassDecorator {
       exports: Reflect.getMetadata(MODULE_OPTIONS.EXPORTS, target) || [],
     };
 
-    const module = AutoModule.forRoot([path, ...paths]);
+    const folderPath = paths ? paths : [getFolderPath()];
+    const module = AutoModule.forRoot(folderPath);
     Module({
       ...originalMetadata,
       imports: [...originalMetadata.imports],
