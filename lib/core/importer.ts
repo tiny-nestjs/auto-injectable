@@ -67,7 +67,7 @@ export class Importer {
 
   private matchGlob(patterns: string[]) {
     const globs = patterns.map((pattern) =>
-      globSync(resolve(process.cwd(), pattern), {
+      globSync(resolve(require.main?.path || process.cwd(), pattern), {
         ignore: ['**/node_modules/**'],
       }),
     );
