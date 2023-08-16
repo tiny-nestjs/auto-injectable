@@ -2,7 +2,7 @@ import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 
-export function ComponentScan(paths?: string[]): ClassDecorator {
+export function ComponentScan(pathParameter?: string | string[]): ClassDecorator {
   return function (target: any) {
     const originalMetadata = {
       imports: Reflect.getMetadata(MODULE_OPTIONS.IMPORTS, target) || [],
@@ -11,8 +11,7 @@ export function ComponentScan(paths?: string[]): ClassDecorator {
       exports: Reflect.getMetadata(MODULE_OPTIONS.EXPORTS, target) || [],
     };
 
-    const folderPath = paths ? paths : [getFolderPath()];
-    const module = AutoModule.forRoot(folderPath);
+    const module = AutoModule.forRoot(getForRootPath(pathParameter));
     Module({
       ...originalMetadata,
       imports: [...originalMetadata.imports],
@@ -21,6 +20,15 @@ export function ComponentScan(paths?: string[]): ClassDecorator {
       exports: [...originalMetadata.exports, ...(module.providers ?? [])],
     })(target);
   };
+}
+
+function getForRootPath(pathParameter?: string | string[]): string[] {
+  if (!pathParameter) return [getFolderPath()];
+  return Array.isArray(pathParameter) ? pathParameter.map(toForRootPath) : [pathParameter].map(toForRootPath);
+}
+
+function toForRootPath(path: string) {
+  return `${require.main?.path || process.cwd()}/**/${path}/**/*.js`;
 }
 
 function getFolderPath(): string {
