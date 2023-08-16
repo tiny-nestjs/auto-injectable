@@ -2,8 +2,9 @@ import { AutoModule } from '../auto.module';
 import { Module } from '@nestjs/common';
 import * as path from 'path';
 
-export function ComponentScan(paths = [getRootGlobPath()]): ClassDecorator {
+export function ComponentScan(paths = []): ClassDecorator {
   return function (target: any) {
+    const path = getFolderPath();
     const originalMetadata = {
       imports: Reflect.getMetadata(MODULE_OPTIONS.IMPORTS, target) || [],
       controllers: Reflect.getMetadata(MODULE_OPTIONS.CONTROLLERS, target) || [],
@@ -11,7 +12,7 @@ export function ComponentScan(paths = [getRootGlobPath()]): ClassDecorator {
       exports: Reflect.getMetadata(MODULE_OPTIONS.EXPORTS, target) || [],
     };
 
-    const module = AutoModule.forRoot(paths);
+    const module = AutoModule.forRoot([path, ...paths]);
     Module({
       ...originalMetadata,
       imports: [...originalMetadata.imports],
@@ -22,9 +23,16 @@ export function ComponentScan(paths = [getRootGlobPath()]): ClassDecorator {
   };
 }
 
-function getRootGlobPath(): string {
-  const rootPath = path.join(path.resolve(require.main?.filename ?? ''), '..') || 'dist';
-  return `${rootPath}/**/*.js`;
+function getFolderPath(): string {
+  const stackTrace = new Error().stack;
+  const filePathRegex = /at __decorate * \((.*\.js)/;
+  const matches = stackTrace?.match(filePathRegex);
+  if (matches && matches.length > 1) {
+    const filePath = matches[1];
+    const matchedPath = path.join(path.resolve(filePath), '..');
+    return `${matchedPath}/**/*.js`;
+  }
+  throw new Error('Could not extract file path from stack trace');
 }
 
 const MODULE_OPTIONS = {
