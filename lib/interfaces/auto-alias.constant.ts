@@ -1,0 +1,1 @@
+export const AUTO_ALIAS_WATERMARK = Symbol('AUTO_ALIAS_WATERMARK');

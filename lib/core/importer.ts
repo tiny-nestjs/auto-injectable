@@ -1,13 +1,21 @@
-import { glob } from 'glob';
+/* eslint-disable @typescript-eslint/no-var-requires */
+import { globSync } from 'glob';
 import { resolve } from 'path';
-import { AUTO_CONTROLLER_WATERMARK, AUTO_INJECTABLE_WATERMARK } from '../interfaces';
-import 'reflect-metadata';
+import { AUTO_ALIAS_WATERMARK, AUTO_CONTROLLER_WATERMARK, AUTO_INJECTABLE_WATERMARK } from '../interfaces';
+import { Provider } from '@nestjs/common';
+import { Type } from '@nestjs/common/interfaces/type.interface';
+import { DynamicModule } from '@nestjs/common/interfaces/modules/dynamic-module.interface';
+import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
+import { Abstract } from '@nestjs/common/interfaces/abstract.interface';
 
 type ClassType = new (...args: any[]) => any;
 
 interface AutoClasses {
-  providers: ClassType[];
-  controllers: ClassType[];
+  providers: Provider[];
+  controllers: Type[];
+  exports: Array<
+    DynamicModule | Promise<DynamicModule> | string | symbol | Provider | ForwardReference | Abstract<any> | ClassType
+  >;
 }
 
 export class Importer {
@@ -20,35 +28,49 @@ export class Importer {
     return Importer.instance;
   }
 
-  static async load(patterns: string[]): Promise<AutoClasses> {
+  static load(patterns: string[]): AutoClasses {
     const importer = Importer.getInstance();
-    const pathNames = await importer.matchGlob(patterns);
-    const foundClasses = await Promise.all(pathNames.map((pathName) => importer.scan(pathName)));
+    const pathNames = importer.matchGlob(patterns);
+    const foundClasses = pathNames.map((pathName) => importer.scan(pathName));
     return foundClasses.reduce(
       (merged, found) => ({
         providers: [...merged.providers, ...found.providers],
         controllers: [...merged.controllers, ...found.controllers],
+        exports: [...merged.exports, ...found.providers],
       }),
-      { providers: [], controllers: [] } as AutoClasses,
+      { providers: [], controllers: [], exports: [] },
     );
   }
 
-  private async scan(pathName: string): Promise<AutoClasses> {
-    const exports: Record<string, unknown> = await import(pathName);
+  private scan(pathName: string): AutoClasses {
+    const exports: Record<string, unknown> = require(pathName);
     const autoClasses = Object.values(exports).filter((value) => typeof value === 'function') as ClassType[];
 
     return autoClasses.reduce(
-      (result: AutoClasses, value: ClassType) => {
-        Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, value) && result.providers.push(value);
-        Reflect.hasMetadata(AUTO_CONTROLLER_WATERMARK, value) && result.controllers.push(value);
-        return result;
+      (classes: AutoClasses, found: ClassType) => {
+        if (Reflect.hasMetadata(AUTO_ALIAS_WATERMARK, found)) {
+          classes.providers.push({
+            provide: Reflect.getMetadata(AUTO_ALIAS_WATERMARK, found),
+            useClass: found,
+          });
+        } else if (Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, found)) {
+          classes.providers.push(found);
+        } else if (Reflect.hasMetadata(AUTO_CONTROLLER_WATERMARK, found)) {
+          classes.controllers.push(found);
+        }
+
+        return classes;
       },
-      { providers: [], controllers: [] },
+      { providers: [], controllers: [], exports: [] },
     );
   }
 
-  private async matchGlob(patterns: string[]) {
-    const globs = patterns.map((pattern) => glob(resolve(process.cwd(), pattern)));
-    return (await Promise.all(globs)).flat();
+  private matchGlob(patterns: string[]) {
+    const globs = patterns.map((pattern) =>
+      globSync(resolve(process.cwd(), pattern), {
+        ignore: ['**/node_modules/**'],
+      }),
+    );
+    return globs.flat();
   }
 }
