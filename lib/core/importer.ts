@@ -36,10 +36,7 @@ export class Importer {
       (merged, found) => ({
         providers: [...merged.providers, ...found.providers],
         controllers: [...merged.controllers, ...found.controllers],
-        exports: [
-          ...merged.exports,
-          ...found.providers.map((provider) => ('provide' in provider ? provider.provide : provider)),
-        ],
+        exports: [...merged.exports, ...found.providers],
       }),
       { providers: [], controllers: [], exports: [] },
     );
