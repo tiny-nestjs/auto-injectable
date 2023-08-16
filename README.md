@@ -17,9 +17,10 @@ With this library, you can inject dependencies into classes without the need for
 
 ## Features
 
-- `@ComponentScan()` decorator enables automatic scanning and injection of classes within a module.
-- `@AutoInjectable()` decorator allows classes to be automatically injectable for DI.
-- `@AutoController()` decorator automatically registers controllers.
+- `@ComponentScan()` enables automatic scanning and injection of classes within a module.
+- `@AutoInjectable()` allows classes to be automatically injectable for DI.
+- `@AutoController()` automatically registers controllers.
+- `@AutoAlias()` defines an alias for the @AutoInjectable() class.
 
 ## Installation
 
@@ -33,7 +34,7 @@ yarn add @tiny-nestjs/auto-injectable
 
 ## Usage
 
-**1. `@ComponentScan()`**
+**1. `@ComponentScan()` basic usage**
 
 ```ts
 import { Module } from '@nestjs/common';
@@ -49,7 +50,7 @@ export class AppModule {
 }
 ``` 
 
-By applying the `@ComponentScan()` decorator to the AppModule class, Nest will automatically scan for classes and
+By applying the `@ComponentScan()` decorator to the `AppModule` class, Nest will automatically scan for classes and
 inject necessary dependencies.
 
 **2. `@AutoInjectable()`**
@@ -63,8 +64,9 @@ export class CatService {
 }
 ```
 
-In this case, by applying the `@AutoInjectable()` decorator to the CatService class, the class has become injectable,
-allowing it to be injected into other modules without the need for module definitions.
+In this case, by applying the `@AutoInjectable()` decorator to the `CatService` class, the class has become injectable,
+allowing it to be injected into other modules without the need for module definitions. (The parameter
+of `@AutoInjectable()` is the same as `@Injectable()`)
 
 **3. `@AutoController()` and dependency injection**
 
@@ -84,10 +86,88 @@ export class CatController {
 ```
 
 The class with the `@AutoInjectable()` decorator has been successfully injected and `/cats` api can be accessed by
-applying `@AutoController()` on `CatController` service.
+applying `@AutoController()` on `CatController` service. (The parameter of `@AutoController()` is the same
+as `@Controller()`)
 
 | You can see actual [project example](https://github.com/tiny-nestjs/auto-injectable-example) here. |
 |----------------------------------------------------------------------------------------------------|
+
+<br>
+
+---
+
+<br>
+
+- _Below are advanced usage techniques of the library. In most cases, utilizing the methods above will suffice._
+
+<br>
+
+**4. `@AutoAlias()`**
+
+```ts
+import { AutoAlias } from '@tiny-nestjs/auto-injectable';
+import { AutoInjectable } from '@tiny-nestjs/auto-injectable';
+
+@AutoAlias('kitty')
+@AutoInjectable()
+export class CatService {
+  // ...
+}
+```
+
+```ts
+import { Inject } from '@nestjs/common';
+import { AutoController } from '@tiny-nestjs/auto-injectable';
+
+@AutoController()
+export class CatController {
+  constructor(@Inject('kitty') private readonly catService: CatService) {
+  }
+}
+```
+
+`@AutoAlias()` is a decorator used to specify an alias. In the constructor of the `CatService` class, `@Inject('kitty')`
+is used to configure the injection of a `CatService` instance with the alias 'kitty'.
+As the library is fully compatible with the `Nest` core, you can use `Nest`'s built-in `@Inject()` decorator.
+
+**5. Define DI scope with the `@ComponentScan()`**
+
+```ts
+import { Module } from '@nestjs/common';
+import { ComponentScan } from '@tiny-nestjs/auto-injectable';
+
+@ComponentScan()
+@Module({})
+export class AnimalModule {
+}
+``` 
+
+The library recommends using `@ComponentScan()` in the AppModule. However, to enable seamless DI within the desired
+scope, you can also specify `@ComponentScan()` in other modules.
+
+**6. `@ComponentScan()` parameters**
+
+```bash
+# normal case
+- /cat
+  - cat.module.ts
+  - ...
+```
+
+```bash
+# special case
+- /animal
+  - /cat
+    - /module
+      - cat.module.ts
+    - /service
+      - cat.service.ts
+```
+
+In most cases, the module is positioned at the top-level directory of its domain. However, in some cases, you can
+specify the exact directory path as an array parameter, such as `@ComponentScan(['animal/cat'])`.
+
+<br>
 
 ## Contribution
 
