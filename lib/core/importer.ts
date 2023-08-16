@@ -66,11 +66,11 @@ export class Importer {
   }
 
   private matchGlob(patterns: string[]) {
-    const globs = patterns.map((pattern) => {
+    const globs = patterns.map((pattern) =>
       globSync(resolve(require.main?.path || process.cwd(), pattern), {
         ignore: ['**/node_modules/**'],
-      });
-    });
+      }),
+    );
     return globs.flat();
   }
 }
