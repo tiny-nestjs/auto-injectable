@@ -1,0 +1,8 @@
+# Global Owners:
+# Global owners will be requested for review when someone opens a pull request.
+*    @Nhahan @player31-kks
+
+# Owners for each library group:
+# No owners yet.
+# e.g. /lib/core  @Nhahan
+# e.g. /lib/decoraters  @player31-kks
