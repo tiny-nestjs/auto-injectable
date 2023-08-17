@@ -75,8 +75,9 @@ export class Importer {
   }
 
   /**
-   * The code is intentionally structured to execute the callback function registered with `.then()`
+   * This code is intentionally structured to execute the callback function registered with `.then()`
    * and proceed through the event loop only after the asynchronous task of the `locate` function is completed.
+   * Designed to handle potential errors after the scan is completed.
    */
   private catchDuplicateScanScope(value: { new (...args: any[]): any; name: string }, pathName: string) {
     locate(value as any).then(({ path }: { path: string }) => {
