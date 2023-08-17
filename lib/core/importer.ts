@@ -14,7 +14,7 @@ interface AutoClasses {
   providers: Provider[];
   controllers: Type[];
   exports: Array<
-    DynamicModule | Promise<DynamicModule> | string | symbol | Provider | ForwardReference | Abstract<any> | ClassType
+    DynamicModule | Promise<DynamicModule> | string | symbol | Provider | ForwardReference | Abstract<any> | Function
   >;
 }
 
