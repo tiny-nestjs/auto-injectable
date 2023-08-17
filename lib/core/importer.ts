@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { globSync } from 'glob';
 import { resolve } from 'path';
-import { AUTO_ALIAS_WATERMARK, AUTO_CONTROLLER_WATERMARK, AUTO_INJECTABLE_WATERMARK } from '../interfaces';
-import { Provider } from '@nestjs/common';
+import {
+  AUTO_ALIAS_WATERMARK,
+  AUTO_CONTROLLER_WATERMARK,
+  AUTO_INJECTABLE_WATERMARK,
+  COMPONENT_SCAN_WATERMARK,
+} from '../interfaces';
+import { Logger, Provider } from '@nestjs/common';
 import { Type } from '@nestjs/common/interfaces/type.interface';
 import { DynamicModule } from '@nestjs/common/interfaces/modules/dynamic-module.interface';
 import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
 import { Abstract } from '@nestjs/common/interfaces/abstract.interface';
+import { locate } from 'func-loc';
 
 type ClassType = new (...args: any[]) => any;
 
@@ -19,17 +25,10 @@ interface AutoClasses {
 }
 
 export class Importer {
-  private static instance: Importer;
-
-  static getInstance(): Importer {
-    if (!Importer.instance) {
-      Importer.instance = new Importer();
-    }
-    return Importer.instance;
-  }
+  private rootPath = '';
 
   static load(patterns: string[]): AutoClasses {
-    const importer = Importer.getInstance();
+    const importer = new Importer();
     const pathNames = importer.matchGlob(patterns);
     const foundClasses = pathNames.map((pathName) => importer.scan(pathName));
     return foundClasses.reduce(
@@ -44,21 +43,22 @@ export class Importer {
 
   private scan(pathName: string): AutoClasses {
     const exports: Record<string, unknown> = require(pathName);
-    const autoClasses = Object.values(exports).filter((value) => typeof value === 'function') as ClassType[];
+    return (Object.values(exports) as ClassType[]).reduce(
+      (classes: AutoClasses, value: ClassType) => {
+        if (typeof value === 'function') {
+          Reflect.hasMetadata(COMPONENT_SCAN_WATERMARK, value) && this.catchDuplicateScanScope(value, pathName);
 
-    return autoClasses.reduce(
-      (classes: AutoClasses, found: ClassType) => {
-        if (Reflect.hasMetadata(AUTO_ALIAS_WATERMARK, found)) {
-          classes.providers.push({
-            provide: Reflect.getMetadata(AUTO_ALIAS_WATERMARK, found),
-            useClass: found,
-          });
-        } else if (Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, found)) {
-          classes.providers.push(found);
-        } else if (Reflect.hasMetadata(AUTO_CONTROLLER_WATERMARK, found)) {
-          classes.controllers.push(found);
+          if (Reflect.hasMetadata(AUTO_ALIAS_WATERMARK, value)) {
+            classes.providers.push({
+              provide: Reflect.getMetadata(AUTO_ALIAS_WATERMARK, value),
+              useClass: value,
+            });
+          } else if (Reflect.hasMetadata(AUTO_INJECTABLE_WATERMARK, value)) {
+            classes.providers.push(value);
+          } else if (Reflect.hasMetadata(AUTO_CONTROLLER_WATERMARK, value)) {
+            classes.controllers.push(value);
+          }
         }
-
         return classes;
       },
       { providers: [], controllers: [], exports: [] },
@@ -72,5 +72,19 @@ export class Importer {
       }),
     );
     return globs.flat();
+  }
+
+  /**
+   * The code is intentionally structured to execute the callback function registered with `.then()`
+   * and proceed through the event loop only after the asynchronous task of the `locate` function is completed.
+   */
+  private catchDuplicateScanScope(value: { new (...args: any[]): any; name: string }, pathName: string) {
+    locate(value as any).then(({ path }: { path: string }) => {
+      if (!this.rootPath) this.rootPath = pathName;
+      if (this.rootPath !== path) {
+        new Logger(value.name).error('[@ComponentScan] module scope cannot be duplicated', `${this.rootPath}\n${path}`);
+        process.exit(1);
+      }
+    });
   }
 }
