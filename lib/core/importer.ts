@@ -46,7 +46,7 @@ export class Importer {
     return (Object.values(exports) as ClassType[]).reduce(
       (classes: AutoClasses, value: ClassType) => {
         if (typeof value === 'function') {
-          Reflect.hasMetadata(COMPONENT_SCAN_WATERMARK, value) && this.catchDuplicateScanScope(value, pathName);
+          Reflect.hasMetadata(COMPONENT_SCAN_WATERMARK, value) && this.catchOverlappedScanScope(value, pathName);
 
           if (Reflect.hasMetadata(AUTO_ALIAS_WATERMARK, value)) {
             classes.providers.push({
@@ -79,11 +79,11 @@ export class Importer {
    * and proceed through the event loop only after the asynchronous task of the `locate` function is completed.
    * Designed to handle potential errors after the scan is completed.
    */
-  private catchDuplicateScanScope(value: { new (...args: any[]): any; name: string }, pathName: string) {
+  private catchOverlappedScanScope(value: { new (...args: any[]): any; name: string }, pathName: string) {
     locate(value as any).then(({ path }: { path: string }) => {
       if (!this.rootPath) this.rootPath = pathName;
       if (this.rootPath !== path) {
-        new Logger(value.name).error('[@ComponentScan] module scope cannot be duplicated', `${this.rootPath}\n${path}`);
+        new Logger(value.name).error('[@ComponentScan] module scope cannot be overlapped', `${this.rootPath}\n${path}`);
         process.exit(1);
       }
     });
