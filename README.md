@@ -17,10 +17,10 @@ With this library, you can inject dependencies into classes without the need for
 
 ## Features
 
-- `@ComponentScan()` enables automatic scanning and injection of classes within a module.
-- `@AutoInjectable()` allows classes to be automatically injectable for DI.
-- `@AutoController()` automatically registers controllers.
-- `@AutoAlias()` defines an alias for the @AutoInjectable() class.
+- @ComponentScan(): enables automatic scanning and injection of classes within a module.
+- @AutoInjectable(): allows classes to be automatically injectable for DI.
+- @AutoController(): automatically registers controllers.
+- @AutoAlias(): defines an alias for the `@AutoInjectable()` class.
 
 ## Installation
 
@@ -142,7 +142,7 @@ export class AnimalModule {
 }
 ``` 
 
-The library recommends using `@ComponentScan()` in the AppModule. However, to enable seamless DI within the desired
+The library recommends using `@ComponentScan()` in the `AppModule`. However, to enable seamless DI within the desired
 scope, you can also specify `@ComponentScan()` in other modules.
 
 **6. `@ComponentScan()` parameters**
@@ -164,8 +164,25 @@ scope, you can also specify `@ComponentScan()` in other modules.
       - cat.service.ts
 ```
 
-In most cases, the module is positioned at the top-level directory of its domain. However, in some cases, you can
-specify the exact directory path as an array parameter, such as `@ComponentScan(['animal/cat'])`.
+`@ComponentScan()` defaults to managing dependencies based on the directory path of the module class with the attached
+decorator, just like in the normal case.
+
+However, you can use a `string` or `string[]` to specify which locations the component scan should explore and manage
+dependencies.
+Since this string path is a pattern, it will scan all matching paths, so you should provide a unique pattern. For
+example, in the above instance, instead of simply defining the directory path as 'cat', you should specify it as '
+animal/cat' to ensure uniqueness. The directory 'cat' could be used somewhere else, after all, such
+as `@ComponentScan('animal/cat')`.
+
+By supporting such custom scope definitions, you can apply the library seamlessly to all projects, even handling
+exceptional cases without exceptions.
+
+For more refined scope specification, you can use `@ComponentScan(['animal/cat/module', 'animal/cat/service'])`.
+
+## FYI
+
+- The scanning scope of `@ComponentScan()` cannot overlap. If there is an overlap, Nest will throw an error. Please
+  handle it by referring to the error log.
 
 <br>
 
