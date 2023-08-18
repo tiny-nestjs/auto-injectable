@@ -27,7 +27,8 @@ export function ComponentScan(pathParameter?: string | string[]): ClassDecorator
 
 function getForRootPath(pathParameter?: string | string[]): string[] {
   if (!pathParameter) return [getFolderPath()];
-  return Array.isArray(pathParameter) ? pathParameter.map(toForRootPath) : [pathParameter].map(toForRootPath);
+  if (Array.isArray(pathParameter)) return pathParameter.map(toForRootPath);
+  return [pathParameter].map(toForRootPath);
 }
 
 function getFolderPath(): string {
