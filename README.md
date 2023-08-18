@@ -17,10 +17,10 @@ With this library, you can inject dependencies into classes without the need for
 
 ## Features
 
-- @ComponentScan(): enables automatic scanning and injection of classes within a module.
-- @AutoInjectable(): allows classes to be automatically injectable for DI.
-- @AutoController(): automatically registers controllers.
-- @AutoAlias(): defines an alias for the `@AutoInjectable()` class.
+- **@ComponentScan()** enables automatic scanning and injection of classes within a module.
+- **@AutoInjectable()** allows classes to be automatically injectable for DI.
+- **@AutoController()** automatically registers controllers.
+- **@AutoAlias()** defines an alias for the `@AutoInjectable()` class.
 
 ## Installation
 
@@ -98,7 +98,7 @@ as `@Controller()`)
 
 <br>
 
-- _Below are advanced usage techniques of the library. In most cases, utilizing the methods above will suffice._
+- _Below are **advanced** usages of the library. In most cases, utilizing the methods above will suffice._
 
 <br>
 
