@@ -84,7 +84,7 @@ export class Importer {
       if (!this.rootPath) this.rootPath = pathName;
       if (this.rootPath !== path) {
         new Logger('ExceptionHandler').error(
-          `ComponentScan() module scope cannot be overlapped.\n\nPotential causes:\n- A overlapped dependecy between modules.\n- Please check the module in '${this.rootPath}' and '${path}'\n\nScope [${value.name}]`,
+          `ComponentScan() module scope cannot be overlapped.\n\nPotential causes:\n- An overlapped dependency between modules.\n- Please check the module in '${this.rootPath}' and '${path}'\n\nScope [${value.name}]`,
         );
         process.exit(1);
       }
