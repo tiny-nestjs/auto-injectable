@@ -31,14 +31,21 @@ export class Importer {
     const importer = new Importer();
     const pathNames = importer.matchGlob(patterns);
     const foundClasses = pathNames.map((pathName) => importer.scan(pathName));
-    return foundClasses.reduce(
+
+    const merged = foundClasses.reduce(
       (merged, found) => ({
-        providers: [...merged.providers, ...found.providers],
-        controllers: [...merged.controllers, ...found.controllers],
-        exports: [...merged.exports, ...found.providers],
+        providers: new Set([...merged.providers, ...found.providers]),
+        controllers: new Set([...merged.controllers, ...found.controllers]),
+        exports: new Set([...merged.exports, ...found.providers]),
       }),
-      { providers: [], controllers: [], exports: [] },
+      { providers: new Set(), controllers: new Set(), exports: new Set() },
     );
+
+    return {
+      providers: [...merged.providers] as Provider[],
+      controllers: [...merged.controllers] as Type[],
+      exports: [...merged.exports] as Array<Provider>,
+    };
   }
 
   private scan(pathName: string): AutoClasses {
