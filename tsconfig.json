@@ -16,10 +16,10 @@
     "useUnknownInCatchVariables": false
   },
   "include": [
-    "lib/**/*"
+    "lib/**/*",
+    "test"
   ],
   "exclude": [
     "node_modules",
-    "test"
   ]
 }
