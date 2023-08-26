@@ -30,15 +30,24 @@ export class Importer {
   static load(patterns: string[]): AutoClasses {
     const importer = new Importer();
     const pathNames = importer.matchGlob(patterns);
-    const foundClasses = pathNames.map((pathName) => importer.scan(pathName));
-    return foundClasses.reduce(
-      (merged, found) => ({
-        providers: [...merged.providers, ...found.providers],
-        controllers: [...merged.controllers, ...found.controllers],
-        exports: [...merged.exports, ...found.providers],
-      }),
-      { providers: [], controllers: [], exports: [] },
+
+    const merged = pathNames.reduce(
+      (merged, pathName) => {
+        const found = importer.scan(pathName);
+
+        found.providers.forEach((provider) => merged.providers.add(provider));
+        found.controllers.forEach((controller) => merged.controllers.add(controller));
+
+        return merged;
+      },
+      { providers: new Set(), controllers: new Set() },
     );
+
+    return {
+      providers: Array.from(merged.providers),
+      controllers: Array.from(merged.controllers),
+      exports: Array.from(merged.providers),
+    } as AutoClasses;
   }
 
   private scan(pathName: string): AutoClasses {
