@@ -175,9 +175,10 @@ exceptional cases without exceptions.
 
 For more refined scope specification, you can use `@ComponentScan(['animal/cat/module', 'animal/cat/service'])`.
 
-- FYI
-    - The scanning scope of `@ComponentScan()` cannot overlap. If there is an overlap, `Nest` will throw an error.
-      Please handle it by referring to the error log.
+### FYI
+
+- The scanning scope of `@ComponentScan()` cannot overlap. If there is an overlap, `Nest` will throw an error.
+  Please handle it by referring to the error log.
 
 <br>
 
