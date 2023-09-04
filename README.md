@@ -28,10 +28,6 @@ With this library, you can inject dependencies into classes without the need for
 npm install @tiny-nestjs/auto-injectable
 ```
 
-```bash
-yarn add @tiny-nestjs/auto-injectable
-```
-
 ## Usage
 
 **1. `@ComponentScan()` basic usage**
@@ -50,7 +46,7 @@ export class AppModule {
 }
 ``` 
 
-By applying the `@ComponentScan()` decorator to the `AppModule` class, Nest will automatically scan for classes and
+By applying the `@ComponentScan()` decorator to the `AppModule` class, `Nest` will automatically scan for classes and
 inject necessary dependencies.
 
 **2. `@AutoInjectable()`**
@@ -179,10 +175,9 @@ exceptional cases without exceptions.
 
 For more refined scope specification, you can use `@ComponentScan(['animal/cat/module', 'animal/cat/service'])`.
 
-## FYI
-
-- The scanning scope of `@ComponentScan()` cannot overlap. If there is an overlap, Nest will throw an error. Please
-  handle it by referring to the error log.
+- FYI
+    - The scanning scope of `@ComponentScan()` cannot overlap. If there is an overlap, `Nest` will throw an error.
+      Please handle it by referring to the error log.
 
 <br>
 
