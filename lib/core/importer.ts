@@ -25,6 +25,7 @@ interface AutoClasses {
 }
 
 export class Importer {
+  private classMap = new Map<string, ClassType>();
   private rootPath = '';
 
   static load(patterns: string[]): AutoClasses {
@@ -90,10 +91,13 @@ export class Importer {
    */
   private catchOverlappedScanScope(value: { new (...args: any[]): any; name: string }, pathName: string) {
     locate(value as any).then(({ path }: { path: string }) => {
+      this.classMap.set(path, value);
       if (!this.rootPath) this.rootPath = pathName;
       if (this.rootPath !== path) {
         new Logger('ExceptionHandler').error(
-          `ComponentScan() module scope cannot be overlapped.\n\nPotential causes:\n- An overlapped dependency between modules.\n- Please check the module in '${this.rootPath}' and '${path}'\n\nScope [${value.name}]`,
+          `ComponentScan() module scope cannot be overlapped.\n\nPotential causes:\n- An overlapped dependency between modules.\n- Please check the module in '${
+            this.rootPath
+          }' and '${path}'\n\nScope [${value.name} -> ${this.classMap.get(this.rootPath)!.name}]`,
         );
         process.exit(1);
       }
